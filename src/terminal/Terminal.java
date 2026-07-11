@@ -1,4 +1,4 @@
-package MiniOS.src.terminal;
+package terminal;
 
 public class Terminal{
  public static void showhelp() {

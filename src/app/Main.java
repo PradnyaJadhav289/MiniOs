@@ -1,16 +1,18 @@
-package MiniOS.src.app;
+package app;
 
 import java.util.Scanner;
-
-import MiniOS.src.terminal.Terminal;
-
-
+import terminal.Terminal;
+import filesystem.FileManager;
+import command.CommandProcessor;
 
 public class Main {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
+        FileManager fileManager = new FileManager();
+        fileManager.initialize();
+        CommandProcessor processor = new CommandProcessor(fileManager);
 
         Terminal.showwelcome();
 
@@ -19,39 +21,8 @@ public class Main {
         while (running) {
 
             System.out.print("JavaOS> ");
-
-            String command = scanner.nextLine();
-
-           
-
-
-            switch (command.toLowerCase()) {
-                case "help":
-                    Terminal.showhelp();
-                    break;
-                case "exit":
-                    Terminal.showexit();
-                    running = false;
-                    break;
-                case "clear":
-                    Terminal.clearScreen();
-                    break;
-                case "date":
-                    Terminal.showdate();
-                    break;
-
-                case "time":
-                    Terminal.showtime();
-                    break;
-
-                case "about":
-                    Terminal.showabout();
-                    break;
-            
-                default:
-                    Terminal.unknownCommand();
-                    break;
-            }
+            String input = scanner.nextLine().trim();
+            running = processor.execute(input);
         }
 
         scanner.close();
