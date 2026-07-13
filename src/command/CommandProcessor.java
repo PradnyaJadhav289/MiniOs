@@ -1,7 +1,7 @@
 package command;
 
 import java.io.File;
-
+import java.util.Scanner;
 import filesystem.FileManager;
 import terminal.Terminal;
 
@@ -9,8 +9,11 @@ public class CommandProcessor {
 
     private final FileManager fileManager;
 
-    public CommandProcessor(FileManager fileManager) {
+    private final Scanner scanner;
+
+    public CommandProcessor(FileManager fileManager, Scanner scanner) {
         this.fileManager = fileManager;
+        this.scanner = scanner;
     }
 
     public boolean execute(String input) {
@@ -99,6 +102,38 @@ public class CommandProcessor {
 
                     System.out.println(file.getName());
 
+                }
+
+                break;
+
+            case "write":
+
+                if (argument.isEmpty()) {
+                    System.out.println("Usage: write <filename>");
+                    break;
+                }
+
+                System.out.println("Enter text (Type END on a new line to save):");
+
+                StringBuilder content1 = new StringBuilder();
+
+                while (true) {
+
+                    String line = scanner.nextLine();
+
+                    if (line.equalsIgnoreCase("END")) {
+                        break;
+                    }
+
+                    content1.append(line).append(System.lineSeparator());
+                }
+
+                boolean success = fileManager.writeFile(argument, content1.toString());
+
+                if (success) {
+                    System.out.println("File saved successfully.");
+                } else {
+                    System.out.println("Unable to write file.");
                 }
 
                 break;

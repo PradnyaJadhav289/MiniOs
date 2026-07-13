@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 
 public class FileManager {
 
@@ -50,8 +52,8 @@ public class FileManager {
     }
 
     public String openFile(String fileName) {
-        File file = new File ("storage",fileName);
-        if(!file.exists()){
+        File file = new File("storage", fileName);
+        if (!file.exists()) {
             return null;
         }
         StringBuilder content = new StringBuilder();
@@ -66,4 +68,25 @@ public class FileManager {
         }
         return content.toString();
     }
+
+    public boolean fileExists(String fileName) {
+        File file = new File("storage", fileName);
+        return file.exists();
+    }
+
+    public boolean writeFile(String fileName, String content) {
+        File file = new File("storage", fileName);
+        if (!file.exists()) {
+            return false;
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            bw.write(content);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
