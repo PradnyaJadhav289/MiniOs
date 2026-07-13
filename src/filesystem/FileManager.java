@@ -6,6 +6,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 
 public class FileManager {
 
@@ -100,6 +103,26 @@ public class FileManager {
             return false;
         }   
         return oldfile.renameTo(newfile);
+    }
+
+    public boolean copyFile(String sourceName,String destiName){
+
+        try{
+            Path source = Paths.get("storage",sourceName);
+            Path destination = Paths.get("storage",destiName);
+            
+            if(!Files.exists(source)){
+                return false;
+            }
+            if(Files.exists(destination)){
+                return false;
+            }
+            Files.copy(source, destination);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
 
