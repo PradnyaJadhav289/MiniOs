@@ -137,7 +137,22 @@ public class CommandProcessor {
                 }
 
                 break;
-            case "exit":
+            
+            
+            case "delete":
+                if (argument.isEmpty()) {
+                    System.out.println("Usage: delete <filename>");
+                    break;
+                }
+                boolean deleted =fileManager.deleteFile(argument);
+                if (deleted){
+                    System.out.println("File deleted successfully.");   
+                }
+                else{
+                    System.out.println("File not found.");
+                }
+            
+                case "exit":
                 Terminal.showexit();
                 return false;
 
