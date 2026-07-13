@@ -40,11 +40,7 @@ public class FileManager {
         }
     }
 
-    public boolean deleteFile(String fileName) {
-        // Logic to delete a file
-        System.out.println("Deleting file: " + fileName);
-        return true; // Return true if successful
-    }
+   
 
     public File[] listFiles() {
         File storage = new File("storage");
@@ -89,4 +85,11 @@ public class FileManager {
         }
     }
 
+    public boolean deleteFile(String fileName){
+        File file =new File("storage", fileName);
+        if(!file.exists()){
+            return false;
+        }
+        return file.delete();
+    }
 }
