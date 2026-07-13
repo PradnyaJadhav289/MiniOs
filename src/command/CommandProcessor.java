@@ -166,6 +166,20 @@ public class CommandProcessor {
                     System.out.println("Unable to rename file.");
                 }
                 break;
+
+
+            case "copy":
+                if (firstargument.isEmpty() || secondargument.isEmpty()) {
+                    System.out.println("Usage: copy <sourcefilename> <destinationfilename>");
+                    break;
+                }
+                boolean copied = fileManager.copyFile(firstargument, secondargument);
+                if (copied) {
+                    System.out.println("File copied successfully.");
+                } else {
+                    System.out.println("Unable to copy file.");
+                }
+                break;
             case "exit":
                 Terminal.showexit();
                 return false;
