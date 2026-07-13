@@ -33,10 +33,14 @@ public class CommandProcessor {
         String command = parts[0].toLowerCase();
 
         // Second word = argument (if present)
-        String argument = "";
+        String firstargument = "";
+        String secondargument = "";
 
         if (parts.length > 1) {
-            argument = parts[1];
+            firstargument = parts[1];
+        }
+        if (parts.length > 2) {
+            secondargument = parts[2];
         }
 
         switch (command) {
@@ -62,11 +66,11 @@ public class CommandProcessor {
                 break;
 
             case "create":
-                if (argument.isEmpty()) {
+                if (firstargument.isEmpty()) {
                     System.out.println("Usage : create <filename>");
                     break;
                 }
-                boolean created = fileManager.createFile(argument);
+                boolean created = fileManager.createFile(firstargument);
                 if (created) {
                     System.out.println("File created successfully.");
                 } else {
@@ -74,11 +78,11 @@ public class CommandProcessor {
                 }
                 break;
             case "open":
-                if (argument.isEmpty()) {
+                if (firstargument.isEmpty()) {
                     System.out.println("Usage : open <filename>");
                     break;
                 }
-                String content = fileManager.openFile(argument);
+                String content = fileManager.openFile(firstargument);
                 if (content == null) {
                     System.out.println("File not found.");
                 } else {
@@ -108,7 +112,7 @@ public class CommandProcessor {
 
             case "write":
 
-                if (argument.isEmpty()) {
+                if (firstargument.isEmpty()) {
                     System.out.println("Usage: write <filename>");
                     break;
                 }
@@ -128,7 +132,7 @@ public class CommandProcessor {
                     content1.append(line).append(System.lineSeparator());
                 }
 
-                boolean success = fileManager.writeFile(argument, content1.toString());
+                boolean success = fileManager.writeFile(firstargument, content1.toString());
 
                 if (success) {
                     System.out.println("File saved successfully.");
@@ -137,22 +141,32 @@ public class CommandProcessor {
                 }
 
                 break;
-            
-            
+
             case "delete":
-                if (argument.isEmpty()) {
+                if (firstargument.isEmpty()) {
                     System.out.println("Usage: delete <filename>");
                     break;
                 }
-                boolean deleted =fileManager.deleteFile(argument);
-                if (deleted){
-                    System.out.println("File deleted successfully.");   
-                }
-                else{
+                boolean deleted = fileManager.deleteFile(firstargument);
+                if (deleted) {
+                    System.out.println("File deleted successfully.");
+                } else {
                     System.out.println("File not found.");
                 }
-            
-                case "exit":
+                break;
+            case "rename":
+                if (firstargument.isEmpty() || secondargument.isEmpty()) {
+                    System.out.println("Usage: rename <oldfilename> <newfilename>");
+                    break;
+                }
+                boolean renamed = fileManager.renameFile(firstargument, secondargument);
+                if (renamed) {
+                    System.out.println("File renamed successfully.");
+                } else {
+                    System.out.println("Unable to rename file.");
+                }
+                break;
+            case "exit":
                 Terminal.showexit();
                 return false;
 

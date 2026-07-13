@@ -92,4 +92,14 @@ public class FileManager {
         }
         return file.delete();
     }
+   
+    public boolean renameFile(String oldName, String newName){
+        File oldfile =new File("storage",oldName);
+        File newfile =new File("storage",newName);
+        if(!oldfile.exists()){
+            return false;
+        }   
+        return oldfile.renameTo(newfile);
+    }
 }
+
