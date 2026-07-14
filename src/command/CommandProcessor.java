@@ -1,20 +1,26 @@
 package command;
 
 import java.io.File;
+import java.util.Scanner;
 
 import filesystem.FileManager;
+import history.CommandHistory;
 import terminal.Terminal;
 
 public class CommandProcessor {
 
     private final FileManager fileManager;
+    private final CommandHistory history;
+    private final Scanner scanner;
 
-    public CommandProcessor(FileManager fileManager) {
+    public CommandProcessor(FileManager fileManager,Scanner scanner , CommandHistory history) {
         this.fileManager = fileManager;
+        this.history = history;
+        this.scanner = scanner;
     }
 
     public boolean execute(String input) {
-
+history.addCommand(input); // Add command to history
         // Remove extra spaces
         input = input.trim();
 
@@ -102,6 +108,8 @@ public class CommandProcessor {
                 }
 
                 break;
+            
+                
             case "exit":
                 Terminal.showexit();
                 return false;

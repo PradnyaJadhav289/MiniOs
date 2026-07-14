@@ -4,6 +4,7 @@ import java.util.Scanner;
 import terminal.Terminal;
 import filesystem.FileManager;
 import command.CommandProcessor;
+import history.CommandHistory;
 
 public class Main {
 
@@ -12,8 +13,8 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         FileManager fileManager = new FileManager();
         fileManager.initialize();
-        CommandProcessor processor = new CommandProcessor(fileManager);
-
+        CommandHistory history = new CommandHistory();
+        CommandProcessor processor = new CommandProcessor(fileManager, scanner, history);
         Terminal.showwelcome();
 
         boolean running = true;
