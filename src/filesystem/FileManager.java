@@ -4,6 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 
 public class FileManager {
 
@@ -38,11 +43,7 @@ public class FileManager {
         }
     }
 
-    public boolean deleteFile(String fileName) {
-        // Logic to delete a file
-        System.out.println("Deleting file: " + fileName);
-        return true; // Return true if successful
-    }
+   
 
     public File[] listFiles() {
         File storage = new File("storage");
@@ -50,8 +51,8 @@ public class FileManager {
     }
 
     public String openFile(String fileName) {
-        File file = new File ("storage",fileName);
-        if(!file.exists()){
+        File file = new File("storage", fileName);
+        if (!file.exists()) {
             return null;
         }
         StringBuilder content = new StringBuilder();
@@ -66,4 +67,62 @@ public class FileManager {
         }
         return content.toString();
     }
+
+    public boolean fileExists(String fileName) {
+        File file = new File("storage", fileName);
+        return file.exists();
+    }
+
+    public boolean writeFile(String fileName, String content) {
+        File file = new File("storage", fileName);
+        if (!file.exists()) {
+            return false;
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            bw.write(content);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteFile(String fileName){
+        File file =new File("storage", fileName);
+        if(!file.exists()){
+            return false;
+        }
+        return file.delete();
+    }
+   
+    public boolean renameFile(String oldName, String newName){
+        File oldfile =new File("storage",oldName);
+        File newfile =new File("storage",newName);
+        if(!oldfile.exists()){
+            return false;
+        }   
+        return oldfile.renameTo(newfile);
+    }
+
+    public boolean copyFile(String sourceName,String destiName){
+
+        try{
+            Path source = Paths.get("storage",sourceName);
+            Path destination = Paths.get("storage",destiName);
+            
+            if(!Files.exists(source)){
+                return false;
+            }
+            if(Files.exists(destination)){
+                return false;
+            }
+            Files.copy(source, destination);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
+

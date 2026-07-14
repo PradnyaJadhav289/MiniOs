@@ -14,7 +14,8 @@ public class Main {
         FileManager fileManager = new FileManager();
         fileManager.initialize();
         CommandHistory history = new CommandHistory();
-        CommandProcessor processor = new CommandProcessor(fileManager, scanner, history);
+        CommandProcessor processor = new CommandProcessor(fileManager, history, scanner);
+
         Terminal.showwelcome();
 
         boolean running = true;
