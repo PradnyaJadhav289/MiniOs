@@ -1,5 +1,9 @@
 package command;
 
+import commands.*;
+import java.util.HashMap;
+import java.util.Map;
+
 import java.io.File;
 import java.util.Scanner;
 import filesystem.FileManager;
@@ -8,6 +12,7 @@ import terminal.Terminal;
 
 public class CommandProcessor {
 
+    private final Map<String, Command> commandMap;
     private final FileManager fileManager;
     private final CommandHistory history;
     private final Scanner scanner;
@@ -16,6 +21,7 @@ public class CommandProcessor {
         this.fileManager = fileManager;
         this.scanner = scanner;
         this.history = history;
+        this.commandMap = CommandRegistry.registerCommands();
     }
 
     public boolean execute(String input) {
@@ -45,28 +51,21 @@ public class CommandProcessor {
             secondargument = parts[2];
         }
 
+
+
+        Command cmd = commandMap.get(command);
+
+        if (cmd != null) {
+            cmd.execute();
+
+            if (command.equals("exit")) {
+                return false;
+            }
+
+            return true;
+        }
         switch (command) {
-
-            case "help":
-                Terminal.showhelp();
-                break;
-
-            case "about":
-                Terminal.showabout();
-                break;
-
-            case "date":
-                Terminal.showdate();
-                break;
-
-            case "time":
-                Terminal.showtime();
-                break;
-
-            case "clear":
-                Terminal.clearScreen();
-                break;
-
+            
             case "create":
                 if (firstargument.isEmpty()) {
                     System.out.println("Usage : create <filename>");
@@ -79,6 +78,7 @@ public class CommandProcessor {
                     System.out.println("File already exists.");
                 }
                 break;
+
             case "open":
                 if (firstargument.isEmpty()) {
                     System.out.println("Usage : open <filename>");
@@ -181,7 +181,7 @@ public class CommandProcessor {
                     System.out.println("Unable to copy file.");
                 }
                 break;
-            
+
             case "history":
                 System.out.println("Command History:");
                 int index = 1;
@@ -190,9 +190,7 @@ public class CommandProcessor {
                     index++;
                 }
                 break;
-            case "exit":
-                Terminal.showexit();
-                return false;
+            
 
             default:
                 Terminal.unknownCommand();
