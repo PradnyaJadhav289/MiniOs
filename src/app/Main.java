@@ -4,11 +4,12 @@ import java.util.Scanner;
 import terminal.Terminal;
 import filesystem.FileManager;
 import command.CommandProcessor;
+import exceptions.InvalidCommandException;
 import history.CommandHistory;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidCommandException {
 
         Scanner scanner = new Scanner(System.in);
         FileManager fileManager = new FileManager();
@@ -20,12 +21,22 @@ public class Main {
 
         boolean running = true;
 
-        while (running) {
+      while (running) {
 
-            System.out.print("JavaOS> ");
-            String input = scanner.nextLine().trim();
-            running = processor.execute(input);
-        }
+    System.out.print("JavaOS> ");
+
+    String input = scanner.nextLine();
+
+    try {
+
+        running = processor.execute(input);
+
+    } catch (InvalidCommandException e) {
+
+        System.out.println(e.getMessage());
+
+    }
+}
 
         scanner.close();
     }

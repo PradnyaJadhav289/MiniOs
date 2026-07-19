@@ -13,15 +13,16 @@ public class CopyCommand implements Command {
             System.out.println("Usage: copy <source> <destination>");
             return true;
         }
-
-        boolean copied =
+try{
+        
                 context.getFileManager()
                         .copyFile(args[0], args[1]);
 
-        if (copied) {
+        
             System.out.println("File copied successfully.");
-        } else {
-            System.out.println("Unable to copy file.");
+        }
+         catch (Exception e) {
+            System.out.println("Unable to copy file: " + e.getMessage());
         }
 
         return true;

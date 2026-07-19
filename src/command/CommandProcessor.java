@@ -1,6 +1,7 @@
 package command;
 
 import commands.*;
+import exceptions.InvalidCommandException;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class CommandProcessor<CommmondContext> {
         this.commandMap = CommandRegistry.registerCommands();
     }
 
-    public boolean execute(String input) {
+    public boolean execute(String input) throws InvalidCommandException {
         history.addCommand(input); // Add command to history
         // Remove extra spaces
         input = input.trim();
@@ -45,12 +46,13 @@ public class CommandProcessor<CommmondContext> {
         CommandContext context = new CommandContext(arguments, fileManager, history, scanner);
         Command cmd = commandMap.get(command);
         if (cmd != null) {
-            cmd.execute(context);
+            try {
+                cmd.execute(context);
+            } catch (InvalidCommandException e) {
+                System.out.println("Error executing command: " + e.getMessage());
+            }
             return true;
         }
-
-        Terminal.unknownCommand();
-
-        return true;
+        throw new InvalidCommandException("Invalid command: " + command);
     }
 }

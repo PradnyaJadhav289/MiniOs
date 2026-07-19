@@ -28,18 +28,18 @@ public class FileManager {
         }
     }
 
-    public boolean createFile(String fileName) {
+    public void  createFile(String fileName) throws IOException {
         // Logic to create a file
+        
         try {
             File storage = new File("storage");
             File file = new File(storage, fileName);
             if (file.exists()) {
-                return false;
+                throw new IOException("File already exists.");
             }
-            return file.createNewFile();
+            file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -50,7 +50,7 @@ public class FileManager {
         return storage.listFiles();
     }
 
-    public String openFile(String fileName) {
+    public String openFile(String fileName) throws IOException {
         File file = new File("storage", fileName);
         if (!file.exists()) {
             return null;
@@ -73,55 +73,53 @@ public class FileManager {
         return file.exists();
     }
 
-    public boolean writeFile(String fileName, String content) {
+    public void writeFile(String fileName, String content) throws IOException {
         File file = new File("storage", fileName);
         if (!file.exists()) {
-            return false;
+            file.createNewFile();
         }
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             bw.write(content);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
-    public boolean deleteFile(String fileName){
+    public void  deleteFile(String fileName) throws IOException {
         File file =new File("storage", fileName);
         if(!file.exists()){
-            return false;
+            throw new IOException("File not found.");
         }
-        return file.delete();
+        file.delete();
     }
    
-    public boolean renameFile(String oldName, String newName){
+    public void  renameFile(String oldName, String newName) throws IOException {
         File oldfile =new File("storage",oldName);
         File newfile =new File("storage",newName);
         if(!oldfile.exists()){
-            return false;
+            throw new IOException("File not found.");
         }   
-        return oldfile.renameTo(newfile);
+        oldfile.renameTo(newfile);
     }
 
-    public boolean copyFile(String sourceName,String destiName){
+    public void copyFile(String sourceName,String destiName) throws IOException {
 
         try{
             Path source = Paths.get("storage",sourceName);
             Path destination = Paths.get("storage",destiName);
             
             if(!Files.exists(source)){
-                return false;
+                throw new IOException("Source file not found.");
             }
+            
             if(Files.exists(destination)){
-                return false;
+                throw new IOException("Destination file already exists.");
             }
             Files.copy(source, destination);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            throw new IOException("Error copying file.");
         }
     }
 }
