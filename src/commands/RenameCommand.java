@@ -13,17 +13,14 @@ public class RenameCommand implements Command {
             System.out.println("Usage: rename <oldfilename> <newfilename>");
             return true;
         }
-
-        boolean renamed =
-                context.getFileManager()
-                        .renameFile(args[0], args[1]);
-
-        if (renamed) {
+try {
+            context.getFileManager().renameFile(args[0], args[1]);
             System.out.println("File renamed successfully.");
-        } else {
-            System.out.println("Unable to rename file.");
+        } catch (Exception e) {
+            System.out.println("Error renaming file: " + e.getMessage());
         }
-
+        
+        
         return true;
     }
 }

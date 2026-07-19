@@ -1,4 +1,6 @@
 package commands;
+import java.io.IOException;
+
 import command.CommandContext;
 
 public class CreateCommand implements Command {
@@ -10,13 +12,14 @@ public class CreateCommand implements Command {
         String [] args= context.getArguments();
           if(args.length==0) {
             System.out.println("Usage: create <filename>");
+          
             return true;
         }
-        boolean created = context.getFileManager().createFile(args[0]);
-        if (created) {
+        try {
+            context.getFileManager().createFile(args[0]);
             System.out.println("File created successfully.");
-        } else {
-            System.out.println("File already exists.");
+        } catch (IOException e) {
+            System.out.println("Error creating file: " + e.getMessage());
         }
         return true;
     }

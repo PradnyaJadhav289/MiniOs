@@ -1,23 +1,34 @@
 package commands;
 
+import java.io.IOException;
+
 import command.CommandContext;
+import exceptions.InvalidCommandException;
 
 public class OpenCommand implements Command {
+
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(CommandContext context) throws InvalidCommandException {
+
         String[] arguments = context.getArguments();
+
         if (arguments.length == 0) {
             System.out.println("Usage: open <file>");
             return true;
         }
-        String filename = arguments[0];
-        String opened= context.getFileManager().openFile(filename);
 
-        if (opened != null) {
-            System.out.println("File opened successfully.");
-        } else {
-            System.out.println("File not found.");
+        try {
+
+            String text = context.getFileManager().openFile(arguments[0]);
+
+            System.out.println(text);
+
+        } catch (IOException e) {
+
+    throw new InvalidCommandException(e.getMessage());
+
         }
+
         return true;
     }
 }

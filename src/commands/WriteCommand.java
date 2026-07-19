@@ -32,15 +32,14 @@ public class WriteCommand implements Command {
                    .append(System.lineSeparator());
         }
 
-        boolean success =
+    try{
                 context.getFileManager()
                         .writeFile(args[0], content.toString());
-
-        if (success) {
-            System.out.println("File saved successfully.");
-        } else {
-            System.out.println("Unable to write file.");
+        } catch (Exception e) {
+            System.out.println("Error writing file: " + e.getMessage());
         }
+
+        System.out.println("File saved successfully.");
 
         return true;
     }

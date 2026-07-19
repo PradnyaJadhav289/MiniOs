@@ -1,5 +1,7 @@
 package commands;
 
+import java.io.IOException;
+
 import command.CommandContext;
 
 public class DeleteCommand implements Command {
@@ -12,13 +14,15 @@ public class DeleteCommand implements Command {
             return true;
         }
         String filename = args[0];
-        boolean deleted  = context.getFileManager().deleteFile(filename);
-        if (deleted) {
+        try{
+            context.getFileManager().deleteFile(filename);
             System.out.println("File deleted: " + filename);
-        } else {
-            System.out.println("Failed to delete file: " + filename);
+        } catch (IOException e) {
+            System.out.println("Error deleting file: " + e.getMessage());
         }
-        return deleted;
+        return true;
     }
     
 }
+
+       
