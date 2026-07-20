@@ -1,20 +1,20 @@
 package commands;
 
 import command.CommandContext;
+import exceptions.InvalidCommandException;
 
 public class WriteCommand implements Command {
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(CommandContext context) throws InvalidCommandException {
 
         String[] args = context.getArguments();
 
         if (args.length == 0) {
-
-            System.out.println("Usage: write <filename>");
-
-            return true;
+            throw new InvalidCommandException("Usage: write <filename>");
         }
+
+        
 
         System.out.println("Enter text (Type END on a new line to save):");
 
@@ -36,7 +36,7 @@ public class WriteCommand implements Command {
                 context.getFileManager()
                         .writeFile(args[0], content.toString());
         } catch (Exception e) {
-            System.out.println("Error writing file: " + e.getMessage());
+            throw new InvalidCommandException(e.getMessage());
         }
 
         System.out.println("File saved successfully.");

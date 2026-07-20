@@ -13,8 +13,7 @@ public class OpenCommand implements Command {
         String[] arguments = context.getArguments();
 
         if (arguments.length == 0) {
-            System.out.println("Usage: open <file>");
-            return true;
+            throw new InvalidCommandException("Usage: open <file>");
         }
 
         try {
@@ -25,7 +24,7 @@ public class OpenCommand implements Command {
 
         } catch (IOException e) {
 
-    throw new InvalidCommandException(e.getMessage());
+            throw new InvalidCommandException(e.getMessage());
 
         }
 
