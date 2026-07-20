@@ -33,7 +33,7 @@ public class Main {
 
     } catch (InvalidCommandException e) {
 
-        System.out.println(e.getMessage());
+        System.out.println("ERROR:-(main) " + e.getMessage());
 
     }
 }
