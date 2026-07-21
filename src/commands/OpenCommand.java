@@ -1,9 +1,9 @@
 package commands;
 
-import java.io.IOException;
 
 import command.CommandContext;
 import exceptions.InvalidCommandException;
+import logger.Logger;
 
 public class OpenCommand implements Command {
 
@@ -16,17 +16,9 @@ public class OpenCommand implements Command {
             throw new InvalidCommandException("Usage: open <file>");
         }
 
-        try {
+        String text = context.getFileManager().openFile(arguments[0]);
 
-            String text = context.getFileManager().openFile(arguments[0]);
-
-            System.out.println(text);
-
-        } catch (IOException e) {
-
-            throw new InvalidCommandException(e.getMessage());
-
-        }
+        Logger.Info(text);
 
         return true;
     }

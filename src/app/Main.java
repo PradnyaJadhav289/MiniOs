@@ -6,6 +6,7 @@ import filesystem.FileManager;
 import command.CommandProcessor;
 import exceptions.InvalidCommandException;
 import history.CommandHistory;
+import logger.Logger;
 
 public class Main {
 
@@ -20,11 +21,10 @@ public class Main {
         Terminal.showwelcome();
 
         boolean running = true;
-
+Logger.Info("MiniOS Started");
       while (running) {
 
-    System.out.print("JavaOS> ");
-
+Logger.Info(" JavaOS>");
     String input = scanner.nextLine();
 
     try {
@@ -33,8 +33,7 @@ public class Main {
 
     } catch (InvalidCommandException e) {
 
-        System.out.println("ERROR:-(main) " + e.getMessage());
-
+Logger.Error("Invalid command: " + e.getMessage());
     }
 }
 

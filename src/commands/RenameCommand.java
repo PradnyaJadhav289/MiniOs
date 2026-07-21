@@ -2,6 +2,7 @@ package commands;
 
 import command.CommandContext;
 import exceptions.InvalidCommandException;
+import logger.Logger;
 
 public class RenameCommand implements Command {
 
@@ -13,12 +14,8 @@ public class RenameCommand implements Command {
         if (args.length < 2) {
             throw new InvalidCommandException("Usage: rename <oldfilename> <newfilename>");
         }
-try {
-            context.getFileManager().renameFile(args[0], args[1]);
-            System.out.println("File renamed successfully.");
-        } catch (Exception e) {
-            throw new InvalidCommandException(e.getMessage());
-        }
+        context.getFileManager().renameFile(args[0], args[1]);
+        Logger.Info("File renamed successfully.");
 
         return true;
     }
