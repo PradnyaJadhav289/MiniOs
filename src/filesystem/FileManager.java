@@ -8,13 +8,17 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import exceptions.InvalidCommandException;
+import logger.Logger;
+
 import java.nio.file.Path;
 
 public class FileManager {
 
     public FileManager() {
         // Constructor
-        System.out.println("File Manager initialized.");
+        Logger.Info("File Manager initialized.");
 
     }
 
@@ -22,13 +26,13 @@ public class FileManager {
         File storage = new File("storage");
         if (!storage.exists()) {
             storage.mkdir();
-            System.out.println("Storage directory created.");
+            Logger.Info("Storage directory created.");
         } else {
-            System.out.println("Storage directory already exists.");
+            Logger.Error("Storage directory already exists.");
         }
     }
 
-    public void  createFile(String fileName) throws IOException {
+    public void  createFile(String fileName) throws InvalidCommandException  {
         // Logic to create a file
         
         try {
@@ -39,8 +43,8 @@ public class FileManager {
             }
             file.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
+throw new InvalidCommandException(e.getMessage());
+     }
     }
 
    
@@ -50,7 +54,7 @@ public class FileManager {
         return storage.listFiles();
     }
 
-    public String openFile(String fileName) throws IOException {
+    public String openFile(String fileName) throws InvalidCommandException {
         File file = new File("storage", fileName);
         if (!file.exists()) {
             return null;
@@ -62,8 +66,7 @@ public class FileManager {
                 content.append(line).append("\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new InvalidCommandException(e.getMessage());
         }
         return content.toString();
     }
@@ -73,53 +76,56 @@ public class FileManager {
         return file.exists();
     }
 
-    public void writeFile(String fileName, String content) throws IOException {
+    public void writeFile(String fileName, String content) throws InvalidCommandException {
         File file = new File("storage", fileName);
         if (!file.exists()) {
-            file.createNewFile();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new InvalidCommandException(e.getMessage());
+            }
         }
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             bw.write(content);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new InvalidCommandException(e.getMessage());
         }
     }
 
-    public void  deleteFile(String fileName) throws IOException {
+    public void  deleteFile(String fileName) throws InvalidCommandException {
         File file =new File("storage", fileName);
         if(!file.exists()){
-            throw new IOException("File not found.");
+            throw new InvalidCommandException("File not found.");
         }
         file.delete();
     }
    
-    public void  renameFile(String oldName, String newName) throws IOException {
+    public void  renameFile(String oldName, String newName) throws InvalidCommandException {
         File oldfile =new File("storage",oldName);
         File newfile =new File("storage",newName);
         if(!oldfile.exists()){
-            throw new IOException("File not found.");
+            throw new InvalidCommandException("File not found.");
         }   
         oldfile.renameTo(newfile);
     }
 
-    public void copyFile(String sourceName,String destiName) throws IOException {
+    public void copyFile(String sourceName,String destiName) throws InvalidCommandException {
 
         try{
             Path source = Paths.get("storage",sourceName);
             Path destination = Paths.get("storage",destiName);
             
             if(!Files.exists(source)){
-                throw new IOException("Source file not found.");
+                throw new InvalidCommandException("Source file not found.");
             }
             
             if(Files.exists(destination)){
-                throw new IOException("Destination file already exists.");
+                throw new InvalidCommandException("Destination file already exists.");
             }
             Files.copy(source, destination);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new IOException("Error copying file.");
+            throw new InvalidCommandException("Error copying file.");
         }
     }
 }

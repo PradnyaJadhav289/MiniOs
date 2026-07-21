@@ -1,7 +1,9 @@
 package commands;
 
+
 import command.CommandContext;
 import exceptions.InvalidCommandException;
+import logger.Logger;
 
 public class CopyCommand implements Command {
 
@@ -19,8 +21,8 @@ try{
                         .copyFile(args[0], args[1]);
 
         
-            System.out.println("File copied successfully.");
-        }
+Logger.Info("File copied successfully.");     
+ }
          catch (Exception e) {
             throw new InvalidCommandException(e.getMessage());
         }

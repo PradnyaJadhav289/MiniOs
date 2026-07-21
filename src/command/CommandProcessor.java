@@ -7,9 +7,11 @@ import java.util.Arrays;
 import java.util.Map;
 
 import java.util.Scanner;
+// import java.util.logging.Logger;
+
 import filesystem.FileManager;
 import history.CommandHistory;
-import terminal.Terminal;
+import logger.Logger;
 
 public class CommandProcessor<CommmondContext> {
 
@@ -26,33 +28,36 @@ public class CommandProcessor<CommmondContext> {
     }
 
     public boolean execute(String input) throws InvalidCommandException {
-        history.addCommand(input); // Add command to history
-        // Remove extra spaces
-        input = input.trim();
 
-        // Empty command
-        if (input.isEmpty()) {
-            return true;
-        }
+    input = input.trim();
 
-        // Split command into parts
-        String[] parts = input.split("\\s+");
-
-        // First word = command
-        String command = parts[0].toLowerCase();
-
-        // Arguments (if present)
-        String[] arguments = Arrays.copyOfRange(parts, 1, parts.length);
-        CommandContext context = new CommandContext(arguments, fileManager, history, scanner);
-        Command cmd = commandMap.get(command);
-        if (cmd != null) {
-            try {
-                cmd.execute(context);
-            } catch (InvalidCommandException e) {
-                System.out.println("Error executing command: " + e.getMessage());
-            }
-            return true;
-        }
-        throw new InvalidCommandException("Invalid command: " + command);
+    if (input.isEmpty()) {
+        return true;
     }
+
+    history.addCommand(input);
+
+    String[] parts = input.split("\\s+");
+
+    String command = parts[0].toLowerCase();
+
+    String[] arguments = Arrays.copyOfRange(parts, 1, parts.length);
+
+    Logger.debug("Executing command: " + command);
+
+    CommandContext context =
+            new CommandContext(arguments, fileManager, history, scanner);
+
+    Command cmd = commandMap.get(command);
+
+    if (cmd == null) {
+        throw new InvalidCommandException("Unknown command: " + command);
+    }
+
+    cmd.execute(context);
+
+    Logger.debug("Command executed successfully: " + command);
+
+    return true;
+}
 }
