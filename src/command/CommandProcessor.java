@@ -13,7 +13,7 @@ import filesystem.FileManager;
 import history.CommandHistory;
 import logger.Logger;
 
-public class CommandProcessor<CommmondContext> {
+public class CommandProcessor {
 
     private final Map<String, Command> commandMap;
     private final FileManager fileManager;
@@ -40,8 +40,12 @@ public class CommandProcessor<CommmondContext> {
     String[] parts = input.split("\\s+");
 
     String command = parts[0].toLowerCase();
-
     String[] arguments = Arrays.copyOfRange(parts, 1, parts.length);
+
+    if (command.equals("cd..")) {
+        command = "cd";
+        arguments = new String[]{".."};
+    }
 
     Logger.debug("Executing command: " + command);
 
