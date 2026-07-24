@@ -8,18 +8,19 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import exceptions.InvalidCommandException;
 import logger.Logger;
 
-import java.nio.file.Path;
-
 public class FileManager {
+
+    private final VirtualFileSystem vfs;
 
     public FileManager() {
         // Constructor
         Logger.Info("File Manager initialized.");
-
+        vfs = new VirtualFileSystem();
     }
 
     public void initialize() {
@@ -28,13 +29,12 @@ public class FileManager {
             storage.mkdir();
             Logger.Info("Storage directory created.");
         } else {
-            Logger.Error("Storage directory already exists.");
+            Logger.Info("Storage directory exists.");
         }
     }
 
-    public void  createFile(String fileName) throws InvalidCommandException  {
-        // Logic to create a file
-        
+    // --- Real filesystem operations used by commands ---
+    public void createFile(String fileName) throws InvalidCommandException {
         try {
             File storage = new File("storage");
             File file = new File(storage, fileName);
@@ -43,11 +43,9 @@ public class FileManager {
             }
             file.createNewFile();
         } catch (IOException e) {
-throw new InvalidCommandException(e.getMessage());
-     }
+            throw new InvalidCommandException(e.getMessage());
+        }
     }
-
-   
 
     public File[] listFiles() {
         File storage = new File("storage");
@@ -63,7 +61,7 @@ throw new InvalidCommandException(e.getMessage());
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                content.append(line).append("\n");
+                content.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new InvalidCommandException(e.getMessage());
@@ -93,34 +91,33 @@ throw new InvalidCommandException(e.getMessage());
         }
     }
 
-    public void  deleteFile(String fileName) throws InvalidCommandException {
-        File file =new File("storage", fileName);
-        if(!file.exists()){
+    public void deleteFile(String fileName) throws InvalidCommandException {
+        File file = new File("storage", fileName);
+        if (!file.exists()) {
             throw new InvalidCommandException("File not found.");
         }
         file.delete();
     }
-   
-    public void  renameFile(String oldName, String newName) throws InvalidCommandException {
-        File oldfile =new File("storage",oldName);
-        File newfile =new File("storage",newName);
-        if(!oldfile.exists()){
+
+    public void renameFile(String oldName, String newName) throws InvalidCommandException {
+        File oldfile = new File("storage", oldName);
+        File newfile = new File("storage", newName);
+        if (!oldfile.exists()) {
             throw new InvalidCommandException("File not found.");
-        }   
+        }
         oldfile.renameTo(newfile);
     }
 
-    public void copyFile(String sourceName,String destiName) throws InvalidCommandException {
+    public void copyFile(String sourceName, String destiName) throws InvalidCommandException {
+        try {
+            Path source = Paths.get("storage", sourceName);
+            Path destination = Paths.get("storage", destiName);
 
-        try{
-            Path source = Paths.get("storage",sourceName);
-            Path destination = Paths.get("storage",destiName);
-            
-            if(!Files.exists(source)){
+            if (!Files.exists(source)) {
                 throw new InvalidCommandException("Source file not found.");
             }
-            
-            if(Files.exists(destination)){
+
+            if (Files.exists(destination)) {
                 throw new InvalidCommandException("Destination file already exists.");
             }
             Files.copy(source, destination);
@@ -128,5 +125,35 @@ throw new InvalidCommandException(e.getMessage());
             throw new InvalidCommandException("Error copying file.");
         }
     }
+
+    // --- Delegation to virtual filesystem (in-memory) ---
+    public void mkdir(String name) {
+        vfs.mkdir(name);
+    }
+
+    public void ls() {
+        vfs.ls();
+    }
+
+    public String pwd() {
+        return vfs.pwd();
+    }
+
+    public boolean cd(String directory) {
+        return vfs.cd(directory);
+    }
+
+    public void touch(String fileName) {
+        vfs.touch(fileName);
+    }
+
+    public void cat(String fileName) {
+        vfs.cat(fileName);
+    }
+
+    public void write(String fileName, String content) {
+        vfs.write(fileName, content);
+    }
+
 }
 

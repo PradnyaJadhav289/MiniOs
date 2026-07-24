@@ -19,6 +19,11 @@ public class CommandRegistry {
       commandMap.put("rename", new RenameCommand());
       commandMap.put("copy", new CopyCommand());
       commandMap.put("history", new HistoryCommand());
+      commandMap.put("mkdir", new MkdirCommand());
+        commandMap.put("ls", new LsCommand());
+        commandMap.put("pwd", new PwdCommand());
+        commandMap.put("cd", new CdCommand());
+
       return commandMap;
    }
 }
